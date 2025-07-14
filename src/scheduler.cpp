@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "scheduler.h"
+#include <Arduino.h>
 
 scheduler::scheduler()
 {
@@ -62,6 +63,7 @@ void scheduler::process()
   if ( timeNow > (lastActionTime+1000))    // 1 second
   {
     pollCycles++;
+    //Serial.println("Scheduler ticking...");
     
     if ( pollCycles % 5 == 0)               // 5 seconds
     {

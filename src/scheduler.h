@@ -40,6 +40,7 @@ private:
 
 
 
+
 public: 
     int     addTask (task *TheTask);
     bool    setTaskState (int taskID, bool bDisabled);
