@@ -27,13 +27,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //3FFD0FE4
 esp_bd_addr_t shokz{0x3f,0xFD, 0x0F, 0xE4};
 
+#define OLEDSCL 32
+#define OLEDSDA 35
+
 #define DeviceName "Minidisc Player"
+scheduler *sched;
+OLEDHandler *oled;
+
+
 BluetoothA2DPSource a2dp_source;
 
 // The supported audio codec in ESP32 A2DP is SBC. SBC audio stream is encoded
 // from PCM data normally formatted as 44.1kHz sampling rate, two-channel 16-bit sample data
 int32_t get_data_frames(Frame *frame, int32_t frame_count) 
 {
+    Serial.printf("Generating a frame of %d bytes\n", frame_count);
     static float m_time = 0.0;
     float m_amplitude = 10000.0;  // -32,768 to 32,767
     float m_deltaTime = 1.0 / 44100.0;
@@ -56,6 +64,8 @@ bool isValid(const char* ssid, esp_bd_addr_t address, int rssi)
   bool bRetVal = false; 
   Serial.print("available SSID: ");
   Serial.println(ssid);
+  oled->clearScreen();
+  oled->drawString(1,1,ssid);
   Serial.print("MAC Address: ");
   Serial.printf("%02x: \n", address);
   if (!a2dp_source.is_connected())
@@ -89,10 +99,9 @@ void  setupBluetoothAudioTransmit()
   a2dp_source.set_data_callback_in_frames(get_data_frames); 
   a2dp_source.set_volume(30);
   a2dp_source.start("MyAudio");
-  a2dp_source.connect_to(shokz);
 }
 
-scheduler *sched;
+
 bool bRunning;
 
 void setup() 
@@ -101,6 +110,10 @@ void setup()
   Serial.println("Startup.........");
   sched = new scheduler(); 
   setupBluetoothAudioTransmit();
+  Serial.println("Attempting to start display");
+  oled = new OLEDHandler(OLEDSCL, OLEDSDA, 128, 64);
+  oled->init();
+  oled->drawString(1,1,"Starting Up");
 }
 
 
@@ -111,7 +124,7 @@ void loop()
   {
     //The scheduler should be considered interruptable, low priority and not accurate. If the system is busy,  it has the potential to miss 
     //Tasks. Audio shold be handled with an interrupt. 
-    sched->process();  
+    //sched->process();  
     delay(1);
 
   }

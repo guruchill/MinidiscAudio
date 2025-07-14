@@ -71,7 +71,7 @@ void scheduler::process()
       {
         Serial.printf("Executing task with index %d", iTask);
         //Execute the task
-        (*taskArray[iTask]).getCallback(); 
+        (*taskArray[iTask]).getCallback();  
       }
     }
 

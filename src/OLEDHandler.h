@@ -26,11 +26,13 @@ public:
     ~OLEDHandler();
     bool init();
     bool drawString (int x, int y, String text);
+    bool clearScreen();
 
 private:
     int pinSCL, pinSDA;
     int xMax, yMax; 
     bool initialized =false;
+    Adafruit_SSD1306 *pSSD1306;
 
 };
 
