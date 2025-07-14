@@ -63,34 +63,16 @@ void scheduler::process()
   if ( timeNow > (lastActionTime+1000))    // 1 second
   {
     pollCycles++;
-    //Serial.println("Scheduler ticking...");
     
-    if ( pollCycles % 5 == 0)               // 5 seconds
-    {
-      
-     
-    }
-    
-    if ( pollCycles %10 == 0)               // 10 seconds
-    {
-     
-    }
 
-    if ( pollCycles % 30 == 0)              // 30 seconds
+    for (int iTask =0; iTask<MAX_TASKS; iTask++ )
     {
-      
-    }
-
-    if ( pollCycles %45 == 0)               // 45 seconds
-    {
-      
-    }
-
-    if ( pollCycles % 60 == 0)              // 1 minute
-    {
-      pollCycles = 0;
-
-      
+      if ((taskArray[iTask]->getCallback()!=nullptr)&&(taskArray[iTask]->isEnabled())&&(taskArray[iTask]->getPeriod()%pollCycles==0))
+      {
+        Serial.printf("Executing task with index %d", iTask);
+        //Execute the task
+        (*taskArray[iTask]).getCallback(); 
+      }
     }
 
     lastActionTime = millis();

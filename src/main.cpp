@@ -63,19 +63,11 @@ bool isValid(const char* ssid, esp_bd_addr_t address, int rssi)
     Serial.println("We're not connected. Try and connect now");
     a2dp_source.connect_to(address);
     bRetVal = true;
-
   }
 
    return bRetVal;
 }
 
-
-
-int32_t get_sound_data(uint8_t *data, int32_t byteCount) {
-    // generate your sound data 
-    // return the effective length in bytes
-    return byteCount;
-}
 
 
 void button_handler(uint8_t id, bool isReleased){
@@ -86,11 +78,8 @@ void button_handler(uint8_t id, bool isReleased){
   }
 }
 
-
 void  setupBluetoothAudioTransmit() 
 {
-
-
   Serial.printf("Bluetooth Audio setup");
   a2dp_source.set_task_core(1);                     //Move the bluetooth stack off to teh second core of the ESP32. 
   a2dp_source.set_volume(100);
@@ -102,19 +91,6 @@ void  setupBluetoothAudioTransmit()
   a2dp_source.start("MyAudio");
   a2dp_source.connect_to(shokz);
 }
-
-
-void setupBluetooth()
-{
-
-  Serial.println("Bluetooth setup");
-  a2dp_source.set_local_name("Minidisc Audio Player");
-  a2dp_source.set_ssid_callback(isValid);
-  a2dp_source.set_auto_reconnect(false);
-  a2dp_source.set_avrc_passthru_command_callback(button_handler);
-  a2dp_source.start("MyAudio");
-}
-
 
 scheduler *sched;
 bool bRunning;
@@ -136,7 +112,7 @@ void loop()
     //The scheduler should be considered interruptable, low priority and not accurate. If the system is busy,  it has the potential to miss 
     //Tasks. Audio shold be handled with an interrupt. 
     sched->process();  
-    delay(1000);
+    delay(1);
 
   }
 
